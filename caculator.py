@@ -1,10 +1,10 @@
 from sys import argv
 class Calculator():
-	def __init__(self,cash):
-		self.cash = cash
-	def computation(self):
-		cash = int(self.cash)
-		taxbase = cash -3500
+	def __init__(self,info):
+		self.info = info
+	def computation(self,cash):
+		cash = int(cash)
+		taxbase = cash-(cash*0.165) -3500
 		if taxbase>0:
 			if taxbase<=1500:
 				tax = taxbase*0.03
@@ -18,13 +18,22 @@ class Calculator():
 				tax = taxbase * 0.3 - 2755
 		else:
 			tax = 0
-		format(tax,'.2f')
-		return tax
+		salary = cash-(cash*0.165)-tax
+		format(salary,'.2f')
+		return salary
+	def income(self):
+		salaryTable = {}
+		idTable = []
+		for tmp in self.info:
+			id,salary = tmp.split(":")
+			salary = self.computation(salary)
+			idTable.append(id)
+			salaryTable[id] = salary 
+		return salaryTable,idTable
 try:
-	if len(argv) == 2:
-		cal = Calculator(argv[1])
-		print(cal.computation())
-	else:
-		print('Parameters Error')
+	cal = Calculator(argv[1:])
+	salaryTable,idTable = cal.income()
+	for tmp in idTable:
+		print('%s:%.2f'%(tmp,salaryTable[tmp]))
 except(ValueError) as e :
 	print('Parameters Error')
